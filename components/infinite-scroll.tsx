@@ -21,7 +21,9 @@ export const InfiniteScroll = ({
     });
 
     useEffect(() => {
-
+        if (isIntersecting && hasNextPage && !isFetchingNextPage && !isManual) {
+            fetchNextPage();
+        }
     }, [isIntersecting, hasNextPage, isFetchingNextPage, isManual, fetchNextPage])
 
     return (
@@ -31,6 +33,7 @@ export const InfiniteScroll = ({
                 <Button
                     variant="secondary"
                     disabled={!hasNextPage || isFetchingNextPage}
+                    onClick={() => fetchNextPage()}
                 >
                     { isFetchingNextPage ? "Loading..." : "Load more" }
                 </Button>
