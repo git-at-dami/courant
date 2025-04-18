@@ -6,6 +6,8 @@ import { trpc } from "@/trpc/client";
 import { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { VideoBanner } from "../components/video-banner";
+import { useAuth } from "@clerk/nextjs";
+import { VideoTopRow } from "../components/video-top-row";
 
 interface VideoSectionProps {
     videoId: string;
@@ -26,8 +28,23 @@ const VideoSkeleton = () => {
 }
 
 const VideoSectionSuspense = ({ videoId }: VideoSectionProps) => {
+    const { isSignedIn } = useAuth();
+
+    const utils = trpc.useUtils();
     // const router = useRouter();
     const [video] = trpc.videos.getOne.useSuspenseQuery({ id: videoId });
+
+    const createView = trpc.videoViews.create.useMutation({
+        onSuccess: () => {
+            utils.videos.getOne.invalidate({ id: videoId });
+        }
+    });
+
+    const handlePlay = () => {
+        if (!isSignedIn) return;
+        
+        createView.mutate({ videoId });
+    };
 
     // const onSelect = (value: string | null) => {
     //     const url = new URL(window.location.href);
@@ -46,7 +63,7 @@ const VideoSectionSuspense = ({ videoId }: VideoSectionProps) => {
     )}>
         <VideoPlayer
             autoplay
-            onPlay={() => {}}
+            onPlay={handlePlay}
             playbackId={video.muxPlaybackId}
             thumbnailUrl={video.thumbnailUrl}
         />
