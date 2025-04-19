@@ -20,6 +20,7 @@ export const useSubscription = ({
             if (fromVideoId) {
                 utils.videos.getOne.invalidate({ id: fromVideoId })
             }
+            utils.users.getOne.invalidate({id: userId})
         },
         onError: (error) => {
             if (error.data?.code === "UNAUTHORIZED") {
@@ -32,6 +33,7 @@ export const useSubscription = ({
             if (fromVideoId) {
                 utils.videos.getOne.invalidate({ id: fromVideoId })
             }
+            utils.users.getOne.invalidate({id: userId})
         },
         onError: (error) => {
             if (error.data?.code === "UNAUTHORIZED") {

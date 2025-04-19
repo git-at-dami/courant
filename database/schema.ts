@@ -6,6 +6,8 @@ export const users = pgTable("users", {
     id: uuid("id").primaryKey().defaultRandom(),
     clerkId: text("clerk_id").unique().notNull(),
     name: text("name").notNull(),
+    bannerUrl: text("banner_url"),
+    bannerKey: text("banner_key"),
     imageUrl: text("image_url").notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().notNull(),
@@ -88,6 +90,7 @@ export const videos = pgTable("videos", {
     previewUrl: text("preview_url"),
     previewKey: text("preview_key"),
     duration: integer("duration").default(0).notNull(),
+    visibilty: videoVisibility("visibility").default("private").notNull(),
     userId: uuid("user_id").references(() => users.id, {
         onDelete: "cascade"
     }).notNull(),
