@@ -99,7 +99,7 @@ export const videos = pgTable("videos", {
     }),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().notNull(),
-}, (t) => [uniqueIndex("videos_title_idx").on(t.title)]);
+});
 
 export const videosSelectSchema = createSelectSchema(videos);
 export const videosInsertSchema = createInsertSchema(videos);
