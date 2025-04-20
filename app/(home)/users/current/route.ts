@@ -20,5 +20,5 @@ export const GET = async () => {
       return redirect("/sign-in");
     }
   
-    return redirect(`/users/${userId}`);
+    return redirect(`/users/${existingUser.id}`);
 }

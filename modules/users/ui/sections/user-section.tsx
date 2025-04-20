@@ -13,7 +13,7 @@ interface UserSectionProps {
     userId?: string;
 };
 
-export const VideoSection = ({ userId }: UserSectionProps) => {
+export const UserSection = ({ userId }: UserSectionProps) => {
     return (
         <Suspense fallback={<UserSectionSkeleton />}>
             <ErrorBoundary fallback={<p>Error...</p>}>

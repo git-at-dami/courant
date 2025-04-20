@@ -1,3 +1,5 @@
+
+import { UserView } from "@/modules/users/ui/views/user-view";
 import { HydrateClient, trpc } from "@/trpc/server";
 
 
@@ -12,7 +14,7 @@ interface PageProps {
 export const Page = async ({ params }: PageProps) => {
   const { userId } = await params;
 
-  void trpc.users.getOne.prefetch({ id: userId });
+  void trpc.users.getOne.prefetch({ id: userId! });
   
   return (
     <HydrateClient>
