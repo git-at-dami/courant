@@ -2,6 +2,7 @@
 
 import { InfiniteScroll } from "@/components/infinite-scroll";
 import { TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { PAGE_DEFAULT_LIMIT } from "@/lib/constants";
 import { trpc } from "@/trpc/client"
 import { Table } from "lucide-react";
 import Link from "next/link";

@@ -3,6 +3,7 @@ import Link from "next/link"
 import { AuthButton } from "@/modules/auth/ui/components/auth-button"
 import { Button } from "@/components/ui/button"
 import { PlusIcon } from "lucide-react"
+import { StudioUploadModal } from "../studio-sidebar/studio-upload-modal"
 
 export const StudioNavbar = () => {
     return (
@@ -19,10 +20,7 @@ export const StudioNavbar = () => {
                 <div className="flex-1"></div>
 
                 <div className="flex-shrink-0 items-center flex gap-4">
-                    <Button>
-                        Create
-                        <PlusIcon className="size-4"/>
-                    </Button>
+                    <StudioUploadModal />
                     <AuthButton />
                 </div>
             </div>

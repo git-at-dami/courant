@@ -1,3 +1,4 @@
+"use client"
 import { Button } from "@/components/ui/button"
 import { Loader2Icon, PlusIcon } from "lucide-react"
 import { trpc } from "@/trpc/client"
