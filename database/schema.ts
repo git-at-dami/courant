@@ -76,7 +76,7 @@ export const videoVisibility = pgEnum("video_visibility", [
 ])
 
 export const videos = pgTable("videos", {
-    id: uuid("id").primaryKey().defaultRandom(),
+    id: uuid("id").primaryKey().defaultRandom().notNull(),
     title: text("title").notNull(),
     description: text("description"),
     muxStatus: text("mux_status"),
@@ -90,7 +90,7 @@ export const videos = pgTable("videos", {
     previewUrl: text("preview_url"),
     previewKey: text("preview_key"),
     duration: integer("duration").default(0).notNull(),
-    visibilty: videoVisibility("visibility").default("private").notNull(),
+    visibility: videoVisibility("visibility").default("private").notNull(),
     userId: uuid("user_id").references(() => users.id, {
         onDelete: "cascade"
     }).notNull(),
@@ -101,9 +101,9 @@ export const videos = pgTable("videos", {
     updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
-export const videosSelectSchema = createSelectSchema(videos);
-export const videosInsertSchema = createInsertSchema(videos);
-export const videosUpdateSchema = createUpdateSchema(videos);
+export const videoSelectSchema = createSelectSchema(videos);
+export const videoInsertSchema = createInsertSchema(videos);
+export const videoUpdateSchema = createUpdateSchema(videos);
 
 export const videoRelations = relations(videos, ({ one, many }) => ({
     user: one(users, {

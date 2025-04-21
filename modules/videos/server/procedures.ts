@@ -1,14 +1,41 @@
 import { database } from "@/database";
 import { baseProcedure, createTRPCRouter, protectedProcedure } from "@/trpc/init";
-import { subscriptions, users, videoReactions, videos } from '@/database/schema';
+import { subscriptions, users, videoReactions, videos, videoUpdateSchema } from '@/database/schema';
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { and, eq, getTableColumns, inArray, isNotNull } from 'drizzle-orm';
-import { videoViews } from '../../../database/schema';
+import { videoViews, videoVisibility } from '../../../database/schema';
 import { mux } from "@/lib/mux";
+import { Input } from "postcss";
 
 
 export const videosRouter = createTRPCRouter({
+    update: protectedProcedure.input(videoUpdateSchema).mutation(async ({ ctx, input }) => {
+        const { id: userId } = ctx.user;
+
+        if (!input.id) {
+            throw new TRPCError({ code: "BAD_REQUEST"})
+        }
+
+        const [updatedVideo] = await database
+            .update(videos)
+            .set({
+                title: input.title,
+                description: input.description,
+                categoryId: input.categoryId,
+                visibility: input.visibility,
+                updatedAt: new Date()
+            }).where(and(
+                eq(videos.id, input.id),
+                eq(videos.userId, userId)
+            )).returning();
+
+        if (!updatedVideo) {
+            throw new TRPCError({ code: "NOT_FOUND"})
+        }
+        
+        return updatedVideo
+    }),
     create: protectedProcedure.mutation(async ({ ctx }) => {
         const { id: userId } = ctx.user;
 
@@ -99,7 +126,6 @@ export const videosRouter = createTRPCRouter({
             .leftJoin(viewerReactions, eq(viewerReactions.videoId, videos.id))
             .leftJoin(viewerSubscriptions, eq(viewerSubscriptions.creatorId, users.id))
             .where(eq(videos.id, input.id));
-            // .groupBy(videos.id, users.id, viewerReactions.type);
             
 
         if (!existingVideo) {
