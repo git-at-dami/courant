@@ -1,5 +1,6 @@
 "use client"
 
+import { InfiniteScroll } from "@/components/infinite-scroll";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { PAGE_DEFAULT_LIMIT } from "@/lib/constants";
 import { trpc } from "@/trpc/client";
@@ -36,5 +37,11 @@ export const ResultsSection = ({
         ))}
       </div>
     )}
+    <InfiniteScroll
+            isManual
+            hasNextPage={resultQuery.hasNextPage}
+            isFetchingNextPage={resultQuery.isFetchingNextPage}
+            fetchNextPage={resultQuery.fetchNextPage}
+        />
   </>
 }
