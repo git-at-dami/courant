@@ -10,6 +10,22 @@ import { Input } from "postcss";
 
 
 export const videosRouter = createTRPCRouter({
+    remove: protectedProcedure.input(z.object({
+        id: z.string().uuid()
+    })).mutation(async ({ ctx, input }) => {
+        const { id: userId } = ctx.user;
+        
+        const [deletedVideo] =  await database.delete(videos).where(and(
+            eq(videos.id, input.id),
+            eq(videos.userId, userId)
+        )).returning()
+
+        if (!deletedVideo) {
+            throw new TRPCError({ code: "NOT_FOUND"})
+        } 
+
+        return deletedVideo;
+    }),
     update: protectedProcedure.input(videoUpdateSchema).mutation(async ({ ctx, input }) => {
         const { id: userId } = ctx.user;
 
