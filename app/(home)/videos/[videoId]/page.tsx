@@ -1,4 +1,4 @@
-import { VideoView } from "@/modules/home/ui/views/video-view";
+import { VideoView } from "@/modules/videos/ui/views/video-view";
 import { HydrateClient, trpc } from "@/trpc/server";
 
 
@@ -13,7 +13,7 @@ interface PageProps {
 export const Page = async ({ searchParams }: PageProps) => {
   const { videoId } = await searchParams;
 
-  void trpc.categories.getOne.prefetch({ id: videoId });
+  void trpc.videos.getOne.prefetch({ id: videoId });
   
   return (
     <HydrateClient>
