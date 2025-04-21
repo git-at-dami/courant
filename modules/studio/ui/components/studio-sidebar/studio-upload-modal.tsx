@@ -5,8 +5,10 @@ import { trpc } from "@/trpc/client"
 import { toast } from "sonner";
 import { ResponsiveModal } from "@/components/responsive-modal";
 import { StudioUploader } from "./studio-uploader";
+import { useRouter } from "next/navigation";
 
 export const StudioUploadModal = () => {
+    const router = useRouter();
     const trpcUtils = trpc.useUtils();
 
     const create = trpc.videos.create.useMutation({
@@ -19,10 +21,17 @@ export const StudioUploadModal = () => {
         }
     });
 
+    const onSuccess = () => {
+        if (!create.data?.video.id) return;
+
+        create.reset();
+        router.push(`/studio/videos/${create.data.video.id}`)
+    }
+
     return (
         <>
             <ResponsiveModal title="Upload a video" open={!!create.data?.url} onOpenChange={() => { create.reset()}}>
-                { create.data?.url ? <StudioUploader endpoint={create.data.url} onSuccess={() => { }} /> : <Loader2Icon /> }
+                { create.data?.url ? <StudioUploader endpoint={create.data.url} onSuccess={onSuccess} /> : <Loader2Icon /> }
             </ResponsiveModal>
 
             <Button variant="secondary" onClick={() => create.mutate()} disabled={create.isPending}>
