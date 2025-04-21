@@ -9,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { videoUpdateSchema } from "@/database/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { trpc } from "@/trpc/client";
-import { CopyCheckIcon, CopyIcon, Globe2Icon, Link, LockIcon, MoreVerticalIcon, TrashIcon } from "lucide-react";
+import { CopyCheckIcon, CopyIcon, Globe2Icon, Link, LockIcon, MoreVerticalIcon, RotateCcwIcon, TrashIcon } from "lucide-react";
 import { Suspense, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { Form, useForm } from "react-hook-form";
@@ -74,6 +74,17 @@ export const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
     }
   })
 
+  const revalidate = trpc.videos.revalidate.useMutation({
+    onSuccess: (data) => {
+      utils.studio.getMany.invalidate();
+      utils.studio.getOne.invalidate({ id: videoId });
+      toast.success("Video revalidated");
+    },
+    onError: () => {
+      toast.error("something went wrong");
+    }
+  })
+
   const onSubmit = async(data: z.infer<typeof videoUpdateSchema>) => {
     await update.mutateAsync(data)
   };
@@ -112,6 +123,10 @@ export const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
                 <DropdownMenuItem onClick={() => remove.mutate({ id: videoId })}>
                     <TrashIcon className="size-4 mr-2" />
                     Delete
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => revalidate.mutate({ id: videoId })}>
+                    <RotateCcwIcon className="size-4 mr-2" />
+                    Revalidate Video Upload
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
