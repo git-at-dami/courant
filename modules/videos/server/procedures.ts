@@ -140,6 +140,7 @@ export const videosRouter = createTRPCRouter({
             .from(videos)
             .innerJoin(users, eq(videos.userId, users.id))
             .leftJoin(viewerReactions, eq(viewerReactions.videoId, videos.id))
+            .leftJoin(videoViews, eq(videoViews.videoId, videos.id))
             .leftJoin(viewerSubscriptions, eq(viewerSubscriptions.creatorId, users.id))
             .where(eq(videos.id, input.id));
             

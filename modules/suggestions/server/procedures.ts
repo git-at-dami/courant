@@ -1,24 +1,34 @@
 import { database } from "@/database";
-import { users, videoReactions, videos, videoViews } from "@/database/schema";
-import { baseProcedure, createTRPCRouter } from "@/trpc/init";
-import { and, desc, eq, getTableColumns, ilike, lt, or } from "drizzle-orm";
 import { z } from "zod";
+import { baseProcedure, createTRPCRouter } from "@/trpc/init";
+import { users, videoReactions, videos, videoViews } from '@/database/schema';
+import { and, desc, eq, getTableColumns, lt, or } from "drizzle-orm";
+import { TRPCError } from "@trpc/server";
 
-export const searchRouter =  createTRPCRouter({
-  getMany: baseProcedure.input(
-    z.object({
-      query: z.string().nullish(),
-      categoryId: z.string().uuid().nullish(),
-      cursor: z.object({
-        id: z.string().uuid(),
-        updatedAt: z.date(),
-      }).nullish(),
-      limit: z.number().min(1).max(100),
-    }),
-  ).query(async ({ input }) => {
-    const { cursor, limit, query, categoryId } = input;
 
-    const videosList  = await database
+export const suggestionsRouter = createTRPCRouter({
+    getMany: baseProcedure
+    .input(
+        z.object({
+            videoId: z.string().uuid(),
+            cursor: z.object({
+                id: z.string().uuid(),
+                updatedAt: z.date(),
+            })
+            .nullish(),
+            limit: z.number().min(1).max(100)
+        })
+    )
+    .query(async ({ input}) => {
+        const { videoId, cursor, limit } = input;
+
+        const [existingVideo] = await database.select().from(videos).where(eq(videos.id, videoId));
+
+        if (!existingVideo) {
+          throw new TRPCError({ code: "NOT_FOUND" });
+        }
+
+        const videosList  = await database
             .select({
               ...getTableColumns(videos),
               user: users,
@@ -33,21 +43,18 @@ export const searchRouter =  createTRPCRouter({
               )),
             })
             .from(videos)
+            .innerJoin(users, eq(videos.userId, users.id))
             .where(and(
-                ilike(
-                  videos.title, `%${query}%`
-                ), 
-                categoryId ? eq(videos.categoryId, categoryId) : undefined,
-                cursor ? or(
+                existingVideo.categoryId 
+                ? eq(videos.categoryId, existingVideo.categoryId) 
+                : undefined, cursor ? or(
                     lt(videos.updatedAt, cursor.updatedAt),
                     and(
                         eq(videos.updatedAt, cursor.updatedAt),
                         lt(videos.id, cursor.id)
                     )
                 ): undefined
-            ))
-            .innerJoin(users, eq(videos.userId, users.id))
-            .orderBy(desc(videos.updatedAt), desc(videos.id))
+            )).orderBy(desc(videos.updatedAt), desc(videos.id))
             
             .limit(limit + 1);
         
@@ -62,5 +69,5 @@ export const searchRouter =  createTRPCRouter({
             } : null;
 
         return { items, nextCursor };
-  })
-})
+    }),
+});

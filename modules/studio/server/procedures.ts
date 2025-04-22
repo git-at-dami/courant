@@ -28,7 +28,7 @@ export const studioRouter = createTRPCRouter({
             );
         
         if (!video) {
-            return new TRPCError({code: "NOT_FOUND"})
+            throw new TRPCError({code: "NOT_FOUND"})
         }
         
         return video;

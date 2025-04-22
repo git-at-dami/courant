@@ -8,6 +8,7 @@ import { ErrorBoundary } from "react-error-boundary";
 import { VideoBanner } from "../components/video-banner";
 import { useAuth } from "@clerk/nextjs";
 import { VideoTopRow } from "../components/video-top-row";
+import { VideoPlayer } from "../components/video-player";
 
 interface VideoSectionProps {
     videoId: string;
@@ -61,13 +62,15 @@ const VideoSectionSuspense = ({ videoId }: VideoSectionProps) => {
         "aspect-video bg-black rounded-xl overflow-hidden relative",
         video.muxStatus !== "ready" && "rounded-b-none",
     )}>
-        <VideoPlayer
-            autoplay
-            onPlay={handlePlay}
-            playbackId={video.muxPlaybackId}
-            thumbnailUrl={video.thumbnailUrl}
-        />
+        <div>
+            <VideoPlayer
+                autoPlay
+                onPlay={handlePlay}
+                playbackId={video.muxPlaybackId}
+                thumbnailUrl={video.thumbnailUrl}
+            />
+        </div>
         <VideoBanner status={video.muxStatus} />
-        <VideoTopRow status={video} />
+        <VideoTopRow video={video} />
     </div>
 };

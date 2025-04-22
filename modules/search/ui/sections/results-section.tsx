@@ -4,6 +4,8 @@ import { FilterCarousel } from "@/components/filter-carousel";
 import { InfiniteScroll } from "@/components/infinite-scroll";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { PAGE_DEFAULT_LIMIT } from "@/lib/constants";
+import { VideoGridCard, VideoGridCardSkeleton } from "@/modules/videos/ui/components/video-grid-card";
+import { VideoRowCard, VideoRowCardSkeleton } from "@/modules/videos/ui/components/video-row-card";
 import { trpc } from "@/trpc/client";
 import { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";

@@ -1,3 +1,5 @@
+"use client"
+
 import { Button } from "@/components/ui/button";
 import { APP_URL } from "@/lib/constants";
 import { SearchIcon, XIcon } from "lucide-react"
