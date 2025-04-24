@@ -65,7 +65,7 @@ const ResultsSectionSuspense = ({
     ) : (
       <div className="flex flex-col gap-4">
         {results.pages.flatMap((page) => page.items ).map((video) => (
-          <VideoRowCard key={video.id} data={video}/>
+          <VideoRowCard key={video.id} data={video} size="default"/>
         ))}
       </div>
     )}

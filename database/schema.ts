@@ -60,7 +60,6 @@ export const subscriptionRelations = relations(subscriptions, ({ one }) => ({
 export const categories = pgTable("categories", {
     id: uuid("id").primaryKey().defaultRandom(),
     name: text("name").notNull().unique(),
-    imageUrl: text("image_url").notNull(),
     description: text("description"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().notNull(),

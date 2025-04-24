@@ -58,19 +58,21 @@ const VideoSectionSuspense = ({ videoId }: VideoSectionProps) => {
 
     //     router.push(url.toString())
     // }
-    return <div className={cn(
-        "aspect-video bg-black rounded-xl overflow-hidden relative",
-        video.muxStatus !== "ready" && "rounded-b-none",
-    )}>
-        <div>
-            <VideoPlayer
-                autoPlay
-                onPlay={handlePlay}
-                playbackId={video.muxPlaybackId}
-                thumbnailUrl={video.thumbnailUrl}
-            />
+    return (
+        <>
+        <div className={cn(
+            "aspect-video bg-black rounded-xl overflow-hidden relative",
+            video.muxStatus !== "ready" && "rounded-b-none",
+        )}>
+                <VideoPlayer
+                    autoPlay
+                    onPlay={handlePlay}
+                    playbackId={video.muxPlaybackId}
+                    thumbnailUrl={video.thumbnailUrl}
+                />
+            
         </div>
         <VideoBanner status={video.muxStatus} />
         <VideoTopRow video={video} />
-    </div>
+    </>)
 };

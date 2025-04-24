@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
@@ -12,11 +12,11 @@ import { trpc } from "@/trpc/client";
 import { CopyCheckIcon, CopyIcon, Globe2Icon, Link, LockIcon, MoreVerticalIcon, RotateCcwIcon, TrashIcon } from "lucide-react";
 import { Suspense, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
-import { Form, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { VideoPlayer } from "@/modules/videos/ui/components/video-player";
 import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
 
 interface FormSectionProps {
   videoId: string
@@ -42,18 +42,13 @@ export const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
   const [categories] = trpc.categories.getMany.useSuspenseQuery();
   const utils = trpc.useUtils();
 
-  let form = useForm<z.infer<typeof videoUpdateSchema>>({
+  const form = useForm<z.infer<typeof videoUpdateSchema>>({
     resolver: zodResolver(videoUpdateSchema),
-    defaultValues: {}
+    defaultValues: video
   });
 
   const update = trpc.videos.update.useMutation({
     onSuccess: (data) => {
-
-      form = useForm<z.infer<typeof videoUpdateSchema>>({
-        resolver: zodResolver(videoUpdateSchema),
-        defaultValues: data
-      });
       utils.studio.getMany.invalidate();
       utils.studio.getOne.invalidate({ id: videoId });
       toast.success("Video updated");

@@ -7,7 +7,7 @@ import { PAGE_DEFAULT_LIMIT } from "@/lib/constants";
 import { VideoThumbnail } from "@/modules/videos/ui/components/video-thumbnail";
 import { trpc } from "@/trpc/client"
 import { format } from "date-fns";
-import { Globe2Icon, LockIcon } from "lucide-react";
+import { Eye, EyeIcon, Globe2Icon, LockIcon, ThumbsUpIcon } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
@@ -95,9 +95,9 @@ export const VideosSectionSuspense = () => {
                         <TableHead>Visibility</TableHead>
                         <TableHead>Status</TableHead>
                         <TableHead>Date</TableHead>
-                        <TableHead className="text-right">Views</TableHead>
+                        <TableHead className="text-center">Views</TableHead>
                         <TableHead className="text-right">Comments</TableHead>
-                        <TableHead className="text-right pr-6">Likes</TableHead>
+                        <TableHead className="text-center pr-6">Likes</TableHead>
                     </TableRow>
                 </TableHeader>
 
@@ -126,12 +126,12 @@ export const VideosSectionSuspense = () => {
                                     </TableCell>
                                     <TableCell>
                                         <div className="flex items-center">
-                                            {video.visibilty === "private" ? (
+                                            {video.visibility === "private" ? (
                                                 <LockIcon className="size-4 mr-2" />
                                             ) : (
                                                 <Globe2Icon className="size-4 mr-2" />
                                             )}
-                                            {video.visibilty}
+                                            {video.visibility}
                                         </div>
                                     </TableCell>
                                     <TableCell>
@@ -142,14 +142,20 @@ export const VideosSectionSuspense = () => {
                                     <TableCell className="text-sm truncate">
                                         {format(new Date(video.createdAt), "d MMM yyyy")}
                                     </TableCell>
-                                    <TableCell className="text-right text-sm">
-                                        views
+                                    <TableCell className="text-sm">
+                                        <span className="flex text-right flex-row gap-1 justify-center">
+                                            <EyeIcon className="size-4" />
+                                            { video.videoViews }
+                                        </span>
                                     </TableCell>
                                     <TableCell className="text-right text-sm">
                                         comments
                                     </TableCell>
-                                    <TableCell className="text-right text-sm pr-6">
-                                        likes
+                                    <TableCell className="text-sm">
+                                    <span className="flex flex-row gap-1 justify-center">
+                                            <ThumbsUpIcon className="size-4" />
+                                            { video.likeCount }
+                                        </span>
                                     </TableCell>
                                 </TableRow>
                             </Link>
