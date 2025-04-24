@@ -13,7 +13,7 @@ const items = [
     },
     {
         title: "Following",
-        url: "/feed/following",
+        url: "/feed/subscriptions",
         icon: PlaySquareIcon,
         auth: true
     },

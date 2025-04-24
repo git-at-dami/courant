@@ -7,6 +7,7 @@ import { and, desc, eq, getTableColumns, inArray, isNotNull, lt, or } from 'driz
 import { videoViews, videoVisibility } from '../../../database/schema';
 import { mux } from "@/lib/mux";
 import { Input } from "postcss";
+import { CarTaxiFront } from "lucide-react";
 
 
 export const videosRouter = createTRPCRouter({
@@ -65,6 +66,7 @@ export const videosRouter = createTRPCRouter({
     
             return { items, nextCursor };
     }),
+    
     getManyTrending: baseProcedure.input(
         z.object({
           cursor: z.object({
@@ -116,6 +118,68 @@ export const videosRouter = createTRPCRouter({
                 const nextCursor = hasMore ? {
                     id: lastItem.id,
                     viewCount: lastItem.viewCount,
+                } : null;
+    
+            return { items, nextCursor };
+    }),
+    getManySubscribed: protectedProcedure.input(
+        z.object({
+          cursor: z.object({
+            id: z.string().uuid(),
+            updatedAt: z.date(),
+          }).nullish(),
+          limit: z.number().min(1).max(100),
+        }),
+      ).query(async ({ input, ctx }) => {
+        const { id: userId } = ctx.user;
+        const { cursor, limit } = input;
+
+        const viewerSubscriptions = database.$with("subscriptions").as(
+            database.select({
+                userId: subscriptions.creatorId,
+            }).from(subscriptions)
+            .where(eq(subscriptions.viewerId, userId))
+        );
+    
+        const videosList  = await database
+                .select({
+                  ...getTableColumns(videos),
+                  user: users,
+                  viewCount: database.$count(videoViews, eq(videoViews.videoId, videos.id)),
+                  likeCount: database.$count(videoReactions, and(
+                    eq(videoReactions.videoId, videos.id),
+                    eq(videoReactions.type, "like"),
+                  )),
+                  dislikeCount: database.$count(videoReactions, and(
+                    eq(videoReactions.videoId, videos.id),
+                    eq(videoReactions.type, "dislike"),
+                  )),
+                })
+                .from(videos)
+                .where(and(
+                    eq(videos.visibility, "public"),
+                    cursor ? or(
+                        lt(videos.updatedAt, cursor.updatedAt),
+                        and(
+                            eq(videos.updatedAt, cursor.updatedAt),
+                            lt(videos.id, cursor.id)
+                        )
+                    ): undefined
+                ))
+                .innerJoin(users, eq(videos.userId, users.id))
+                .innerJoin(viewerSubscriptions, eq(viewerSubscriptions.userId, users.id))
+                .orderBy(desc(videos.updatedAt), desc(videos.id))
+                
+                .limit(limit + 1);
+            
+                const hasMore = videosList.length > limit;
+    
+                const items = hasMore ? videosList.slice(0, -1): videosList;
+                const lastItem = items[items.length - 1];
+    
+                const nextCursor = hasMore ? {
+                    id: lastItem.id,
+                    updatedAt: lastItem.updatedAt,
                 } : null;
     
             return { items, nextCursor };
