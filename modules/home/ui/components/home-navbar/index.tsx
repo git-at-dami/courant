@@ -9,7 +9,7 @@ export const HomeNavbar = () => {
             <div className="flex items-center gap-4 w-full">
                 <div className="flex items-center flex-shrink-0">
                     <SidebarTrigger />
-                    <Link href="/">
+                    <Link prefetch href="/">
                         <p className="text-xl font-semibold tracking-tight">Courant</p>
                     </Link>
                 </div>

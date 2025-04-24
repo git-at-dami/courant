@@ -11,7 +11,7 @@ export const StudioNavbar = () => {
             <div className="flex items-center gap-4 w-full">
                 <div className="flex items-center flex-shrink-0">
                     <SidebarTrigger />
-                    <Link href="/studio">
+                    <Link prefetch href="/studio">
                         <p className="text-xl font-semibold tracking-tight">Courant Studio</p>
                     </Link>
                 </div>
