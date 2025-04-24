@@ -12,7 +12,7 @@ export const VideoThumbnail = ({
   duration,
   imageUrl,
   title,
-  previewUrl
+  previewUrl,
 }: VideoThumbnailProps) => {
   return (
     <div className="relative group">
@@ -22,13 +22,15 @@ export const VideoThumbnail = ({
           src={imageUrl ?? "/next.svg"}
           alt="thumbnail"
           fill
-          className="size-full object-cover group-hover:opacity-0" />
+          className="size-full object-cover group-hover:opacity-0"
+        />
         <Image
           src={previewUrl ?? "/next.svg"}
           alt="preview gif"
           fill
           unoptimized
-          className="size-full object-cover opacity-0 group-hover:opacity-100" />
+          className="size-full object-cover opacity-0 group-hover:opacity-100"
+        />
       </div>
 
       {/* Video Duration Box */}
@@ -36,5 +38,5 @@ export const VideoThumbnail = ({
         {formatDuration(duration)}
       </div>
     </div>
-  )
-}
+  );
+};

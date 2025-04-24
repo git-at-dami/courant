@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { Skeleton } from "@/components/ui/skeleton";
 import { videos } from "@/database/schema";
@@ -18,47 +18,59 @@ interface SuggestionsSectionProps {
 
 export const SuggestionsSection = ({ videoId }: SuggestionsSectionProps) => {
   return (
-      <Suspense fallback={<VideoSkeleton/>}>
-          <ErrorBoundary fallback={<p>Error...</p>}>
-              <SuggestionsSectionSuspense videoId={videoId} />
-          </ErrorBoundary>
-      </Suspense>
-  )
-}
+    <Suspense fallback={<VideoSkeleton />}>
+      <ErrorBoundary fallback={<p>Error...</p>}>
+        <SuggestionsSectionSuspense videoId={videoId} />
+      </ErrorBoundary>
+    </Suspense>
+  );
+};
 
 const VideoSkeleton = () => {
-  return <Skeleton />
-}
+  return <Skeleton />;
+};
 
-const SuggestionsSectionSuspense = ({ videoId, isManual }: SuggestionsSectionProps) => {
+const SuggestionsSectionSuspense = ({
+  videoId,
+  isManual,
+}: SuggestionsSectionProps) => {
   const { isSignedIn } = useAuth();
 
   const utils = trpc.useUtils();
   // const router = useRouter();
-  const [suggestions, query] = trpc.suggestions.getMany.useSuspenseInfiniteQuery({ 
-    videoId,
-    limit: PAGE_DEFAULT_LIMIT
-  }, {
-    getNextPageParam: (lastPage) => lastPage.nextCursor
-  });
+  const [suggestions, query] =
+    trpc.suggestions.getMany.useSuspenseInfiniteQuery(
+      {
+        videoId,
+        limit: PAGE_DEFAULT_LIMIT,
+      },
+      {
+        getNextPageParam: (lastPage) => lastPage.nextCursor,
+      },
+    );
 
-
-  return (<>
-    <div className="hidden md:block space-y-3">
-      {suggestions.pages.flatMap((page) => page.items.map((video) => (
-        <VideoRowCard key={video.id} data={video} size="compact" />
-      )))}
-    </div>
-    <div className="block md:hidden space-y-10">
-      {suggestions.pages.flatMap((page) => page.items.map((video) => (
-        <VideoGridCard key={video.id} data={video} />
-      )))}
-    </div>
-    <InfiniteScroll
-      isManual={isManual}
-      hasNextPage={query.hasNextPage}
-      isFetchingNextPage={query.isFetchingNextPage}
-      fetchNextPage={query.fetchNextPage}
-    />
-  </>)
+  return (
+    <>
+      <div className="hidden md:block space-y-3">
+        {suggestions.pages.flatMap((page) =>
+          page.items.map((video) => (
+            <VideoRowCard key={video.id} data={video} size="compact" />
+          )),
+        )}
+      </div>
+      <div className="block md:hidden space-y-10">
+        {suggestions.pages.flatMap((page) =>
+          page.items.map((video) => (
+            <VideoGridCard key={video.id} data={video} />
+          )),
+        )}
+      </div>
+      <InfiniteScroll
+        isManual={isManual}
+        hasNextPage={query.hasNextPage}
+        isFetchingNextPage={query.isFetchingNextPage}
+        fetchNextPage={query.fetchNextPage}
+      />
+    </>
+  );
 };

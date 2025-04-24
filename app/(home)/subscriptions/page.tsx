@@ -5,11 +5,13 @@ import { HydrateClient, trpc } from "@/trpc/server";
 export const dynamic = "force-dynamic";
 
 export const Page = async () => {
-  void trpc.subscriptions.getMany.prefetchInfinite({  limit: PAGE_DEFAULT_LIMIT });
-  
+  void trpc.subscriptions.getMany.prefetchInfinite({
+    limit: PAGE_DEFAULT_LIMIT,
+  });
+
   return (
     <HydrateClient>
-      <SubscriptionsView  />
+      <SubscriptionsView />
     </HydrateClient>
   );
 };

@@ -22,9 +22,7 @@ export default function RootLayout({
   return (
     <ClerkProvider afterSignOutUrl="/">
       <html lang="en">
-        <body
-          className={`${inter.className} antialiased`}
-        >
+        <body className={`${inter.className} antialiased`}>
           <TRPCProvider>
             <Toaster />
             {children}

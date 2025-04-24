@@ -4,55 +4,65 @@ import { InfiniteScroll } from "@/components/infinite-scroll";
 import { Skeleton } from "@/components/ui/skeleton";
 import { videos } from "@/database/schema";
 import { PAGE_DEFAULT_LIMIT } from "@/lib/constants";
-import { VideoGridCard, VideoGridCardSkeleton } from "@/modules/videos/ui/components/video-grid-card";
+import {
+  VideoGridCard,
+  VideoGridCardSkeleton,
+} from "@/modules/videos/ui/components/video-grid-card";
 import { trpc } from "@/trpc/client";
 import { useRouter } from "next/navigation";
 import { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 
 interface VideosSectionProps {
-    userId: string;
+  userId: string;
 }
 
 export const VideosSection = ({ userId }: VideosSectionProps) => {
-    return (
-        <Suspense key={userId} fallback={<VideosSkeleton/>}>
-            <ErrorBoundary fallback={<p>Error...</p>}>
-                <VideosSectionSuspense userId={userId} />
-            </ErrorBoundary>
-        </Suspense>
-    )
-}
+  return (
+    <Suspense key={userId} fallback={<VideosSkeleton />}>
+      <ErrorBoundary fallback={<p>Error...</p>}>
+        <VideosSectionSuspense userId={userId} />
+      </ErrorBoundary>
+    </Suspense>
+  );
+};
 
 const VideosSkeleton = () => {
-    return <div className="gap-4 gap-y-10 grid grid-cols-1 sm:grid-cols-2 
-    lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4">
-      {
-        Array.from({ length: 18 })
-        .map((_, index) => (
-          <VideoGridCardSkeleton key={index} />
-        ))
-      }
+  return (
+    <div
+      className="gap-4 gap-y-10 grid grid-cols-1 sm:grid-cols-2 
+    lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4"
+    >
+      {Array.from({ length: 18 }).map((_, index) => (
+        <VideoGridCardSkeleton key={index} />
+      ))}
     </div>
-}
+  );
+};
 
 const VideosSectionSuspense = ({ userId }: VideosSectionProps) => {
-    const router = useRouter();
-    const [videos, query] = trpc.videos.getMany.useSuspenseInfiniteQuery({
+  const router = useRouter();
+  const [videos, query] = trpc.videos.getMany.useSuspenseInfiniteQuery(
+    {
       userId,
-      limit: PAGE_DEFAULT_LIMIT}, {
-        getNextPageParam: (lastPage) => lastPage.nextCursor
-      });
+      limit: PAGE_DEFAULT_LIMIT,
+    },
+    {
+      getNextPageParam: (lastPage) => lastPage.nextCursor,
+    },
+  );
 
-    return <div>
-      <div className="gap-4 gap-y-10 grid grid-cols-1 sm:grid-cols-2 
-      lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4">
-        {
-          videos.pages.flatMap((page) => page.items)
+  return (
+    <div>
+      <div
+        className="gap-4 gap-y-10 grid grid-cols-1 sm:grid-cols-2 
+      lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4"
+      >
+        {videos.pages
+          .flatMap((page) => page.items)
           .map((video) => (
             <VideoGridCard key={video.id} data={video} />
-          ))
-        }
+          ))}
       </div>
       <InfiniteScroll
         hasNextPage={query.hasNextPage}
@@ -60,4 +70,5 @@ const VideosSectionSuspense = ({ userId }: VideosSectionProps) => {
         fetchNextPage={query.fetchNextPage}
       />
     </div>
+  );
 };

@@ -26,36 +26,30 @@ export const SubscriptionItemSkeleton = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
 export const SubscriptionItem = ({
   name,
   avatarUrl,
   subscriberCount,
   onUnSubscribe,
-  disabled
+  disabled,
 }: SubscriptionItemProps) => {
   return (
     <div className="flex items-start gap-4">
-      <UserAvatar
-        size="lg"
-        imageUrl={avatarUrl}
-        name={name}
-      />
+      <UserAvatar size="lg" imageUrl={avatarUrl} name={name} />
 
       <div className="flex-1">
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="text-sm">
-              {name}
-            </h3>
+            <h3 className="text-sm">{name}</h3>
             <p className="text-xs text-muted-foreground">
               {subscriberCount.toLocaleString()} subscribers
             </p>
           </div>
 
-          <SubscriptionButton 
+          <SubscriptionButton
             size="sm"
             onClick={(e) => {
               e.preventDefault();
@@ -67,5 +61,5 @@ export const SubscriptionItem = ({
         </div>
       </div>
     </div>
-  )
-}
+  );
+};

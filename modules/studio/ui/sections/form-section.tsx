@@ -1,15 +1,42 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { videoUpdateSchema } from "@/database/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { trpc } from "@/trpc/client";
-import { CopyCheckIcon, CopyIcon, Globe2Icon, Link, LockIcon, MoreVerticalIcon, RotateCcwIcon, TrashIcon } from "lucide-react";
+import {
+  CopyCheckIcon,
+  CopyIcon,
+  Globe2Icon,
+  Link,
+  LockIcon,
+  MoreVerticalIcon,
+  RotateCcwIcon,
+  TrashIcon,
+} from "lucide-react";
 import { Suspense, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { toast } from "sonner";
@@ -19,32 +46,32 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 
 interface FormSectionProps {
-  videoId: string
-};
+  videoId: string;
+}
 
 export const FormSection = ({ videoId }: FormSectionProps) => {
   return (
-      <Suspense fallback={<FormSectionSkeleton />}>
-          <ErrorBoundary fallback={<p>Error...</p>}>
-              <FormSectionSuspense videoId={videoId} />
-          </ErrorBoundary>
-      </Suspense>
-  )
-}
+    <Suspense fallback={<FormSectionSkeleton />}>
+      <ErrorBoundary fallback={<p>Error...</p>}>
+        <FormSectionSuspense videoId={videoId} />
+      </ErrorBoundary>
+    </Suspense>
+  );
+};
 
 const FormSectionSkeleton = () => {
-  return <p>Loading...</p>
-}
+  return <p>Loading...</p>;
+};
 
 export const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
-  const router =  useRouter();
+  const router = useRouter();
   const [video] = trpc.studio.getOne.useSuspenseQuery({ id: videoId });
   const [categories] = trpc.categories.getMany.useSuspenseQuery();
   const utils = trpc.useUtils();
 
   const form = useForm<z.infer<typeof videoUpdateSchema>>({
     resolver: zodResolver(videoUpdateSchema),
-    defaultValues: video
+    defaultValues: video,
   });
 
   const update = trpc.videos.update.useMutation({
@@ -55,8 +82,8 @@ export const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
     },
     onError: () => {
       toast.error("something went wrong");
-    }
-  })
+    },
+  });
 
   const remove = trpc.videos.remove.useMutation({
     onSuccess: (data) => {
@@ -66,8 +93,8 @@ export const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
     },
     onError: () => {
       toast.error("something went wrong");
-    }
-  })
+    },
+  });
 
   const revalidate = trpc.videos.revalidate.useMutation({
     onSuccess: (data) => {
@@ -77,11 +104,11 @@ export const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
     },
     onError: () => {
       toast.error("something went wrong");
-    }
-  })
+    },
+  });
 
-  const onSubmit = async(data: z.infer<typeof videoUpdateSchema>) => {
-    await update.mutateAsync(data)
+  const onSubmit = async (data: z.infer<typeof videoUpdateSchema>) => {
+    await update.mutateAsync(data);
   };
 
   const fullUrl = `${process.env.VERCEL_URL || "http://localhost:3000"}/videos/${videoId}`;
@@ -93,8 +120,8 @@ export const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
 
     setTimeout(() => {
       setIsCopied(false);
-    }, 2000)
-  }
+    }, 2000);
+  };
 
   return (
     <Form {...form}>
@@ -102,7 +129,9 @@ export const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
         <div className="flex items-center justify-between mb-6">
           <div>
             <h1 className="text-2xl font-bold">Video details</h1>
-            <p className="text-xs text-muted-foreground">Manage your video details</p>
+            <p className="text-xs text-muted-foreground">
+              Manage your video details
+            </p>
           </div>
           <div className="flex items-center gap-x-2">
             <Button type="submit" disabled={update.isPending}>
@@ -115,13 +144,17 @@ export const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => remove.mutate({ id: videoId })}>
-                    <TrashIcon className="size-4 mr-2" />
-                    Delete
+                <DropdownMenuItem
+                  onClick={() => remove.mutate({ id: videoId })}
+                >
+                  <TrashIcon className="size-4 mr-2" />
+                  Delete
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => revalidate.mutate({ id: videoId })}>
-                    <RotateCcwIcon className="size-4 mr-2" />
-                    Revalidate Video Upload
+                <DropdownMenuItem
+                  onClick={() => revalidate.mutate({ id: videoId })}
+                >
+                  <RotateCcwIcon className="size-4 mr-2" />
+                  Revalidate Video Upload
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -129,35 +162,28 @@ export const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
           <div className="space-y-8 lg:col-span-3">
-            <FormField 
+            <FormField
               control={form.control}
               name="title"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>
-                    Title
-                  </FormLabel>
+                  <FormLabel>Title</FormLabel>
                   <FormControl>
-                    <Input 
-                      {...field}
-                      placeholder="Add a title to your video"
-                    />
+                    <Input {...field} placeholder="Add a title to your video" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
 
-            <FormField 
+            <FormField
               control={form.control}
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>
-                    Description
-                  </FormLabel>
+                  <FormLabel>Description</FormLabel>
                   <FormControl>
-                    <Textarea 
+                    <Textarea
                       {...field}
                       value={field.value ?? ""}
                       rows={10}
@@ -170,27 +196,27 @@ export const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
               )}
             />
 
-            <FormField 
+            <FormField
               control={form.control}
               name="categoryId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>
-                    Category
-                  </FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value ?? undefined}>
+                  <FormLabel>Category</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value ?? undefined}
+                  >
                     <FormControl>
                       <SelectTrigger>
                         <SelectValue placeholder="Select a category" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      { categories.map((category) => (
+                      {categories.map((category) => (
                         <SelectItem key={category.id} value={category.id}>
-                          { category.name }
+                          {category.name}
                         </SelectItem>
-                      )) }
-                   
+                      ))}
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -204,20 +230,27 @@ export const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
               <div className="aspect-video overflow-hidden relative">
                 <VideoPlayer
                   playbackId={video.muxPlaybackId}
-                  thumbnailUrl={video.thumbnailUrl} />
+                  thumbnailUrl={video.thumbnailUrl}
+                />
               </div>
               <div className="p-4 flex flex-col gap-y-6">
                 <div className="flex justify-between items-center gap-x-2">
                   <div className="flex flex-col gap-y-1">
-                    <p className="text-muted-foreground text-xs">
-                      Video link
-                    </p>
+                    <p className="text-muted-foreground text-xs">Video link</p>
                     <div className="flex items-center gap-x-2">
                       <Link prefetch href={`/videos/${video.id}`}>
-                        <p className="line-clamp-1 text-sm text-blue-500">{fullUrl}</p>
+                        <p className="line-clamp-1 text-sm text-blue-500">
+                          {fullUrl}
+                        </p>
                       </Link>
-                      <Button type="button" variant="ghost" size="icon" onClick={onCopy} disabled={isCopied}>
-                        { isCopied ? <CopyCheckIcon/> : <CopyIcon /> }
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        onClick={onCopy}
+                        disabled={isCopied}
+                      >
+                        {isCopied ? <CopyCheckIcon /> : <CopyIcon />}
                       </Button>
                     </div>
                   </div>
@@ -228,9 +261,7 @@ export const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
                     <p className="text-muted-foreground text-xs">
                       Video status
                     </p>
-                    <p className="text-sm">
-                      {video.muxStatus || "preparing"}
-                    </p>
+                    <p className="text-sm">{video.muxStatus || "preparing"}</p>
                   </div>
                 </div>
 
@@ -247,33 +278,34 @@ export const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
               </div>
             </div>
 
-            <FormField 
+            <FormField
               control={form.control}
               name="visibility"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>
-                    Visibility
-                  </FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value ?? undefined}>
+                  <FormLabel>Visibility</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value ?? undefined}
+                  >
                     <FormControl>
                       <SelectTrigger>
                         <SelectValue placeholder="Select visibility" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                        <SelectItem value="public">
-                          <div className="flex items-center">
-                            <Globe2Icon className="size-4 mr-2" />
-                            Public
-                          </div>
-                        </SelectItem>
-                        <SelectItem value="private">
-                          <div className="flex items-center">
-                            <LockIcon className="size-4 mr-2" />
-                            Private
-                          </div>
-                        </SelectItem>
+                      <SelectItem value="public">
+                        <div className="flex items-center">
+                          <Globe2Icon className="size-4 mr-2" />
+                          Public
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="private">
+                        <div className="flex items-center">
+                          <LockIcon className="size-4 mr-2" />
+                          Private
+                        </div>
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -284,5 +316,5 @@ export const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
         </div>
       </form>
     </Form>
-  )
-}
+  );
+};

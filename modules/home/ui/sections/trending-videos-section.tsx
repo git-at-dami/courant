@@ -2,52 +2,62 @@
 
 import { InfiniteScroll } from "@/components/infinite-scroll";
 import { PAGE_DEFAULT_LIMIT } from "@/lib/constants";
-import { VideoGridCard, VideoGridCardSkeleton } from "@/modules/videos/ui/components/video-grid-card";
+import {
+  VideoGridCard,
+  VideoGridCardSkeleton,
+} from "@/modules/videos/ui/components/video-grid-card";
 import { trpc } from "@/trpc/client";
 import { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 
 export const TrendingVideosSection = () => {
-    return (
-        <Suspense fallback={<TrendingVideosSkeleton/>}>
-            <ErrorBoundary fallback={<p>Error...</p>}>
-                <TrendingVideosSectionSuspense />
-            </ErrorBoundary>
-        </Suspense>
-    )
-}
+  return (
+    <Suspense fallback={<TrendingVideosSkeleton />}>
+      <ErrorBoundary fallback={<p>Error...</p>}>
+        <TrendingVideosSectionSuspense />
+      </ErrorBoundary>
+    </Suspense>
+  );
+};
 
 const TrendingVideosSkeleton = () => {
-    return <div className="gap-4 gap-y-10 grid grid-cols-1 sm:grid-cols-2 
+  return (
+    <div
+      className="gap-4 gap-y-10 grid grid-cols-1 sm:grid-cols-2 
     lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4
     [@media(min-width:1920px):grid-cols-5 [@media(min-width:2200px):grid-cols-6]
-    ">
-      {
-        Array.from({ length: 18 })
-        .map((_, index) => (
-          <VideoGridCardSkeleton key={index} />
-        ))
-      }
+    "
+    >
+      {Array.from({ length: 18 }).map((_, index) => (
+        <VideoGridCardSkeleton key={index} />
+      ))}
     </div>
-}
+  );
+};
 
 const TrendingVideosSectionSuspense = () => {
-    const [videos, query] = trpc.videos.getManyTrending.useSuspenseInfiniteQuery({
-      limit: PAGE_DEFAULT_LIMIT}, {
-        getNextPageParam: (lastPage) => lastPage.nextCursor
-      });
+  const [videos, query] = trpc.videos.getManyTrending.useSuspenseInfiniteQuery(
+    {
+      limit: PAGE_DEFAULT_LIMIT,
+    },
+    {
+      getNextPageParam: (lastPage) => lastPage.nextCursor,
+    },
+  );
 
-    return <div>
-      <div className="gap-4 gap-y-10 grid grid-cols-1 sm:grid-cols-2 
+  return (
+    <div>
+      <div
+        className="gap-4 gap-y-10 grid grid-cols-1 sm:grid-cols-2 
       lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4
       [@media(min-width:1920px):grid-cols-5 [@media(min-width:2200px):grid-cols-6]
-      ">
-        {
-          videos.pages.flatMap((page) => page.items)
+      "
+      >
+        {videos.pages
+          .flatMap((page) => page.items)
           .map((video) => (
             <VideoGridCard key={video.id} data={video} />
-          ))
-        }
+          ))}
       </div>
       <InfiniteScroll
         hasNextPage={query.hasNextPage}
@@ -55,4 +65,5 @@ const TrendingVideosSectionSuspense = () => {
         fetchNextPage={query.fetchNextPage}
       />
     </div>
+  );
 };

@@ -10,9 +10,9 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "fonts.gstatic.com",
-      }
-    ]
-  }
+      },
+    ],
+  },
 };
 
 export default nextConfig;

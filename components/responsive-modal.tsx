@@ -14,7 +14,7 @@ export const ResponsiveModal = ({
   children,
   open,
   title,
-  onOpenChange
+  onOpenChange,
 }: ResponsiveModalProps) => {
   const isMobile = useIsMobile();
 
@@ -23,24 +23,22 @@ export const ResponsiveModal = ({
       <Drawer open={open} onOpenChange={onOpenChange}>
         <DrawerContent>
           <DrawerHeader>
-            <DrawerTitle>
-              {title}
-            </DrawerTitle>
+            <DrawerTitle>{title}</DrawerTitle>
           </DrawerHeader>
-          { children }
+          {children}
         </DrawerContent>
       </Drawer>
     );
   }
 
-  return <Dialog open={open} onOpenChange={onOpenChange}>
-    <DialogContent>
-      <DialogHeader>
-        <DialogTitle>
-          {title}
-        </DialogTitle>
-      </DialogHeader>
-      { children }
-    </DialogContent>
-  </Dialog>;
-}
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>{title}</DialogTitle>
+        </DialogHeader>
+        {children}
+      </DialogContent>
+    </Dialog>
+  );
+};
