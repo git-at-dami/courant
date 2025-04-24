@@ -19,7 +19,7 @@ const items = [
     },
     {
         title: "The Buzz",
-        url: "/feed/buzz",
+        url: "/feed/trending",
         icon: FlameIcon
     }
 ]
