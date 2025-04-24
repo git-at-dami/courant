@@ -10,7 +10,7 @@ import { UserPageInfo, UserPageInfoSkeleton } from "../components/user-page-info
 import { Separator } from "@/components/ui/separator";
 
 interface UserSectionProps {
-    userId?: string;
+    userId: string;
 };
 
 export const UserSection = ({ userId }: UserSectionProps) => {
@@ -33,10 +33,6 @@ const UserSectionSkeleton = () => {
 }
 
 const UserSectionSuspense = ({ userId }: UserSectionProps) => {
-    const { isSignedIn } = useAuth();
-
-    const utils = trpc.useUtils();
-
     const [user] = trpc.users.getOne.useSuspenseQuery({ id: userId });
 
     return <div className="flex flex-col">

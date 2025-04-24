@@ -22,6 +22,7 @@ export const useSubscription = ({
             }
             utils.users.getOne.invalidate({id: userId});
             utils.videos.getManySubscribed.invalidate();
+            utils.subscriptions.getMany.invalidate();
         },
         onError: (error) => {
             if (error.data?.code === "UNAUTHORIZED") {
@@ -36,6 +37,7 @@ export const useSubscription = ({
             }
             utils.users.getOne.invalidate({id: userId})
             utils.videos.getManySubscribed.invalidate();
+            utils.subscriptions.getMany.invalidate();
         },
         onError: (error) => {
             if (error.data?.code === "UNAUTHORIZED") {

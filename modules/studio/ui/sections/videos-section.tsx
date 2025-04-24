@@ -35,7 +35,7 @@ const VideosSectionSkeleton = () => {
                         <TableHead>Status</TableHead>
                         <TableHead>Date</TableHead>
                         <TableHead className="text-right">Views</TableHead>
-                        <TableHead className="text-right">Comments</TableHead>
+                        {/* <TableHead className="text-right">Comments</TableHead> */}
                         <TableHead className="text-right pr-6">Likes</TableHead>
                     </TableRow>
                 </TableHeader>
@@ -64,9 +64,9 @@ const VideosSectionSkeleton = () => {
                                 <TableCell className="text-right">
                                     <Skeleton className="h-4 w-12 ml-auto" />
                                 </TableCell>
-                                <TableCell className="text-right">
+                                {/* <TableCell className="text-right">
                                     <Skeleton className="h-4 w-12 ml-auto" />
-                                </TableCell>
+                                </TableCell> */}
                                 <TableCell className="text-right pr-6">
                                     <Skeleton className="h-4 w-12 ml-auto" />
                                 </TableCell>
@@ -96,7 +96,7 @@ export const VideosSectionSuspense = () => {
                         <TableHead>Status</TableHead>
                         <TableHead>Date</TableHead>
                         <TableHead className="text-center">Views</TableHead>
-                        <TableHead className="text-right">Comments</TableHead>
+                        {/* <TableHead className="text-right">Comments</TableHead> */}
                         <TableHead className="text-center pr-6">Likes</TableHead>
                     </TableRow>
                 </TableHeader>
@@ -148,9 +148,9 @@ export const VideosSectionSuspense = () => {
                                             { video.videoViews }
                                         </span>
                                     </TableCell>
-                                    <TableCell className="text-right text-sm">
+                                    {/* <TableCell className="text-right text-sm">
                                         comments
-                                    </TableCell>
+                                    </TableCell> */}
                                     <TableCell className="text-sm">
                                     <span className="flex flex-row gap-1 justify-center">
                                             <ThumbsUpIcon className="size-4" />
