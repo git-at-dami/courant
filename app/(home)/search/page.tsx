@@ -11,7 +11,7 @@ interface PageProps {
   }>;
 }
 
-export const Page = async ({ searchParams }: PageProps) => {
+const Page = async ({ searchParams }: PageProps) => {
   const { query, categoryId } = await searchParams;
 
   void trpc.categories.getMany.prefetch();

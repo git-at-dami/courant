@@ -31,7 +31,6 @@ import {
   CopyCheckIcon,
   CopyIcon,
   Globe2Icon,
-  Link,
   LockIcon,
   MoreVerticalIcon,
   RotateCcwIcon,
@@ -44,6 +43,7 @@ import { z } from "zod";
 import { VideoPlayer } from "@/modules/videos/ui/components/video-player";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import Link from "next/link";
 
 interface FormSectionProps {
   videoId: string;

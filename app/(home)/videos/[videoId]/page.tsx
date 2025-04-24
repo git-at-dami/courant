@@ -10,7 +10,7 @@ interface PageProps {
   }>;
 }
 
-export const Page = async ({ params }: PageProps) => {
+const Page = async ({ params }: PageProps) => {
   const { videoId } = await params;
 
   void trpc.videos.getOne.prefetch({ id: videoId });

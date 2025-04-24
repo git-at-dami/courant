@@ -14,24 +14,24 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const items = [
-  // {
-  //     title: "History",
-  //     url: "/playlists/history",
-  //     icon: HistoryIcon,
-  //     auth: true
-  // },
-  // {
-  //     title: "Liked Videos",
-  //     url: "/playlists/liked",
-  //     icon: ThumbsUpIcon,
-  //     auth: true
-  // },
-  // {
-  //     title: "Playlists",
-  //     url: "playlists",
-  //     icon: ListVideoIcon,
-  //     auth: true
-  // }
+  {
+      title: "History",
+      url: "/playlists/history",
+      icon: HistoryIcon,
+      auth: true
+  },
+  {
+      title: "Liked Videos",
+      url: "/playlists/liked",
+      icon: ThumbsUpIcon,
+      auth: true
+  },
+  {
+      title: "Playlists",
+      url: "playlists",
+      icon: ListVideoIcon,
+      auth: true
+  }
 ];
 
 export const PersonalSection = () => {

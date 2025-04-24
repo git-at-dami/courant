@@ -20,7 +20,7 @@ export const SubscriptionsLoadingSkeleton = () => {
   return (
     <>
       {[1, 2, 3, 4].map((i) => {
-        <SidebarMenuItem key={i}>
+        return <SidebarMenuItem key={i}>
           <SidebarMenuButton disabled>
             <Skeleton className="size-6 rounded-full shrink-0" />
             <Skeleton className="h-4 w-full" />
